@@ -1,6 +1,6 @@
 ## Product Requirements Document (PRD)
-
 - Include note on PRD to update SPECIFICATION.md after finish the implementation
+- After the implementation, the status of the document must be "Done"
 
 ## Codebase Patterns
 - Use `set -Eeuo pipefail` at top of all bash scripts for error handling
