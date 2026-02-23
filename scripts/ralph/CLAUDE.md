@@ -2,18 +2,24 @@
 
 You are an autonomous coding agent working on a software project.
 
+## ShellCheck Configuration Pattern
+- .shellcheckrc format: use `disable=SC2148` (no spaces around equals sign)
+- SC1134 errors occur when .shellcheckrc has invalid syntax - always test with `shellcheck file.sh` after changes
+- SC1091 warnings are informational when sourcing files - use `shellcheck -x` to include sourced files in analysis
+
 ## Your Task
 
-1. Read the PRD at `prd.json` (in the same directory as this file)
-2. Read the progress log at `progress.txt` (check Codebase Patterns section first)
-3. Check you're on the correct branch from PRD `branchName`. If not, check it out or create from main.
-4. Pick the **highest priority** user story where `passes: false`
-5. Implement that single user story
-6. Run quality checks (e.g., typecheck, lint, test - use whatever your project requires)
-7. Update CLAUDE.md files if you discover reusable patterns (see below)
-8. If checks pass, commit ALL changes with message: `feat: [Story ID] - [Story Title]`
-9. Update the PRD to set `passes: true` for the completed story
-10. Append your progress to `progress.txt`
+1. Run quality checks to ensure that you are starting in a green state
+2. Read the PRD at `prd.json` (in the same directory as this file)
+3. Read the progress log at `progress.txt` (check Codebase Patterns section first)
+4. Check you are on the correct branch from PRD `branchName`. If not, check it out or create from main.
+5. Pick the **highest priority** user story where `passes: false`
+6. Implement that single user story
+7. Run quality checks (e.g., typecheck, lint, test - use whatever your project requires)
+8. Update CLAUDE.md files if you discover reusable patterns (see below)
+9. If checks pass, commit ALL changes with message: `feat: [Story ID] - [Story Title]`
+10. Update the PRD to set `passes: true` for the completed story
+11. Append your progress to `progress.txt`
 
 ## Progress Report Format
 
@@ -72,7 +78,7 @@ Only update CLAUDE.md if you have **genuinely reusable knowledge** that would he
 
 ## Quality Requirements
 
-- ALL commits must pass your project's quality checks (typecheck, lint, test)
+- ALL commits must pass your project's quality checks (lint, test). The QA process is documented on REAME.md. Manual steps should be ignored.
 - Do NOT commit broken code
 - Keep changes focused and minimal
 - Follow existing code patterns
