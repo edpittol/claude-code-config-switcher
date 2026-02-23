@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+# Source utility and core functions
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/utils.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/core.sh"
+
+# Show usage information
+usage() {
+    echo "Usage: ccsw <command> [options]"
+    echo ""
+    echo "Commands:"
+    echo "  list           List all available profiles"
+    echo "  use <profile>  Switch to a profile"
+    echo "  current        Show current active profile"
+    echo "  delete <profile>  Delete a profile"
+    echo ""
+    echo "Examples:"
+    echo "  ccsw list"
+    echo "  ccsw use my-profile"
+    echo "  ccsw current"
+    echo "  ccsw delete old-profile"
+}
+
+# Main entry point
+main() {
+    local command="${1:-}"
+
+    # No command - show usage
+    if [[ -z "$command" ]]; then
+        usage
+        return 0
+    fi
+
+    # Handle commands
+    case "$command" in
+        list)
+            ccsw_list
+            ;;
+        use)
+            local profile="${2:-}"
+            if [[ -z "$profile" ]]; then
+                log_error "Profile name required for use command"
+                echo "Usage: ccsw use <profile>" >&2
+                return 1
+            fi
+            ccsw_use "$profile"
+            ;;
+        current)
+            ccsw_current
+            ;;
+        delete)
+            local profile="${2:-}"
+            if [[ -z "$profile" ]]; then
+                log_error "Profile name required for delete command"
+                echo "Usage: ccsw delete <profile>" >&2
+                return 1
+            fi
+            ccsw_delete "$profile"
+            ;;
+        -h|--help|help)
+            usage
+            ;;
+        *)
+            log_error "Unknown command: $command"
+            echo "Usage: ccsw <command> [options]" >&2
+            usage >&2
+            return 1
+            ;;
+    esac
+}
+
+# Run main function with all arguments
+main "$@"
