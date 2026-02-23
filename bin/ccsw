@@ -37,6 +37,7 @@ main() {
     case "$command" in
         list)
             ccsw_list
+            return $?
             ;;
         use)
             local profile="${2:-}"
@@ -46,9 +47,11 @@ main() {
                 return 1
             fi
             ccsw_use "$profile"
+            return $?
             ;;
         current)
             ccsw_current
+            return $?
             ;;
         delete)
             local profile="${2:-}"
@@ -58,6 +61,7 @@ main() {
                 return 1
             fi
             ccsw_delete "$profile"
+            return $?
             ;;
         -h|--help|help)
             usage
