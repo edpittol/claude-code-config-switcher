@@ -1,0 +1,6 @@
+*.bats.out
+.DS_Store
+*.swp
+coverage/
+.claude/skills/ralph/prd.json
+.claude/skills/ralph/progress.txt
