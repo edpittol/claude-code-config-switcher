@@ -87,3 +87,39 @@ ccsw_current() {
         return 0
     fi
 }
+
+# Delete a profile directory with safety guards
+ccsw_delete() {
+    local profile="$1"
+    local profile_dir
+    local current_config_dir="${CLAUDE_CONFIG_DIR:-}"
+
+    # Validate profile name
+    if ! validate_profile_name "$profile"; then
+        log_error "Invalid profile name: $profile"
+        return 1
+    fi
+
+    # Get profile directory
+    profile_dir=$(get_profile_dir "$profile")
+
+    # Check if profile directory exists
+    if [[ ! -d "$profile_dir" ]]; then
+        log_error "Profile not found: $profile"
+        return 1
+    fi
+
+    # Check if trying to delete currently active profile
+    if [[ -n "$current_config_dir" && "$current_config_dir" == "$profile_dir" ]]; then
+        log_error "Cannot delete active profile: $profile"
+        return 2
+    fi
+
+    # Remove the profile directory
+    if ! rm -rf "$profile_dir"; then
+        log_error "Failed to delete profile: $profile"
+        return 1
+    fi
+
+    return 0
+}
