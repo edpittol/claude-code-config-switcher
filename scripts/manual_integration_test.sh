@@ -50,8 +50,7 @@ echo ""
 # Test 5: Delete profile2
 echo "6. Testing ccsw delete..."
 echo "Deleting integration-test2..."
-./bin/ccsw delete integration-test2
-if [[ $? -eq 0 ]]; then
+if ./bin/ccsw delete integration-test2; then
     echo "✓ integration-test2 deleted successfully"
 else
     echo "✗ Failed to delete integration-test2"

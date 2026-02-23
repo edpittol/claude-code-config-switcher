@@ -47,8 +47,7 @@ fi
 echo ""
 echo "6. Testing ccsw delete..."
 echo "Deleting test-profile2..."
-./bin/ccsw delete test-profile2
-if [[ $? -eq 0 ]]; then
+if ./bin/ccsw delete test-profile2; then
     echo "✓ test-profile2 deleted successfully"
 else
     echo "✗ Failed to delete test-profile2"
