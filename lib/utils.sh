@@ -78,8 +78,8 @@ get_profile_name_from_path() {
     # Extract the profile name from the path
     local profile_name="${path##*/}"
 
-    # Verify it's actually a ccsw profile
-    if [[ "${path%/}" == "${profiles_dir%/}" ]]; then
+    # Check if the path starts with profiles_dir and has a profile name
+    if [[ "$path" == "${profiles_dir%/}/${profile_name}" ]]; then
         echo "$profile_name"
     else
         echo ""

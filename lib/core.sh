@@ -53,3 +53,37 @@ ccsw_use() {
     echo "export CLAUDE_CONFIG_DIR=${profile_dir%/}"
     return 0
 }
+
+# Show the currently active profile from CLAUDE_CONFIG_DIR
+ccsw_current() {
+    local current_config_dir="${CLAUDE_CONFIG_DIR:-}"
+    local profiles_dir
+    local profile_name
+
+    # Check if CLAUDE_CONFIG_DIR is set
+    if [[ -z "$current_config_dir" ]]; then
+        echo "No active profile"
+        return 0
+    fi
+
+    # Get the profiles directory
+    profiles_dir=$(get_profiles_dir)
+
+    # Check if the current config directory is managed by ccsw
+    profile_name=$(get_profile_name_from_path "$current_config_dir")
+
+    if [[ -n "$profile_name" ]]; then
+        # It's a ccsw-managed profile
+        echo "$profile_name"
+        return 0
+    elif [[ "$current_config_dir" != "$profiles_dir" ]]; then
+        # It's an external directory
+        echo "External: $current_config_dir"
+        log_warn "CLAUDE_CONFIG_DIR points to external directory: $current_config_dir"
+        return 3
+    else
+        # No active profile
+        echo "No active profile"
+        return 0
+    fi
+}
