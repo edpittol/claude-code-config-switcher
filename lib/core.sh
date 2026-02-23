@@ -28,3 +28,28 @@ ccsw_list() {
     echo "$profiles"
     return 0
 }
+
+# Switch to a profile by outputting an export statement
+ccsw_use() {
+    local profile="$1"
+    local profile_dir
+
+    # Validate profile name
+    if ! validate_profile_name "$profile"; then
+        log_error "Invalid profile name: $profile"
+        return 1
+    fi
+
+    # Get profile directory
+    profile_dir=$(get_profile_dir "$profile")
+
+    # Check if profile directory exists
+    if [[ ! -d "$profile_dir" ]]; then
+        log_error "Profile not found: $profile"
+        return 1
+    fi
+
+    # Output the export statement for eval
+    echo "export CLAUDE_CONFIG_DIR=${profile_dir%/}"
+    return 0
+}
