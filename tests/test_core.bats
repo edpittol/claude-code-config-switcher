@@ -217,3 +217,45 @@ teardown() {
     [ "$status" -eq 0 ]
     [[ "$output" == *"export CLAUDE_CONFIG_DIR=$CCSW_PROFILES_DIR/test-profile" ]]
 }
+
+@test "ccsw_create creates profile directory and outputs path" {
+    local new_profile="test-new-profile"
+    local expected_path="$CCSW_PROFILES_DIR/$new_profile"
+
+    # Verify profile doesn't exist before creation
+    [ ! -d "$expected_path" ]
+
+    run ccsw_create "$new_profile"
+    [ "$status" -eq 0 ]
+    [ "$output" == "$expected_path" ]
+    [ -d "$expected_path" ]
+}
+
+@test "ccsw_create returns exit code 1 for invalid profile name" {
+    run ccsw_create "@invalid"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"ERROR: Invalid profile name: @invalid" ]]
+}
+
+@test "ccsw_create returns exit code 1 for existing profile" {
+    run ccsw_create "profile1"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"ERROR: Profile already exists: profile1" ]]
+}
+
+@test "ccsw_create creates profiles directory if it doesn't exist" {
+    # Remove profiles directory
+    rm -rf "$CCSW_PROFILES_DIR"
+
+    local new_profile="test-new-profile"
+    local expected_path="$CCSW_PROFILES_DIR/$new_profile"
+
+    # Verify profiles directory doesn't exist
+    [ ! -d "$CCSW_PROFILES_DIR" ]
+
+    run ccsw_create "$new_profile"
+    [ "$status" -eq 0 ]
+    [ "$output" == "$expected_path" ]
+    [ -d "$expected_path" ]
+    [ -d "$CCSW_PROFILES_DIR" ]
+}

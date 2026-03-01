@@ -88,6 +88,45 @@ ccsw_current() {
     fi
 }
 
+# Create a profile directory and output its path
+ccsw_create() {
+    local profile="$1"
+    local profile_dir
+    local profiles_dir
+
+    # Validate profile name
+    if ! validate_profile_name "$profile"; then
+        log_error "Invalid profile name: $profile"
+        return 1
+    fi
+
+    # Get directories
+    profiles_dir=$(get_profiles_dir)
+    profile_dir=$(get_profile_dir "$profile")
+
+    # Check if profile already exists
+    if [[ -d "$profile_dir" ]]; then
+        log_error "Profile already exists: $profile"
+        return 1
+    fi
+
+    # Create profiles directory if it doesn't exist
+    if ! ensure_config_dirs; then
+        log_error "Failed to create profiles directory"
+        return 1
+    fi
+
+    # Create profile directory with proper permissions
+    if ! mkdir -p "$profile_dir"; then
+        log_error "Failed to create profile directory: $profile"
+        return 1
+    fi
+
+    # Output the path for eval usage
+    echo "$profile_dir"
+    return 0
+}
+
 # Delete a profile directory with safety guards
 ccsw_delete() {
     local profile="$1"

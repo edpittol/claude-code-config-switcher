@@ -11,14 +11,16 @@ usage() {
     echo "Usage: ccsw <command> [options]"
     echo ""
     echo "Commands:"
-    echo "  list           List all available profiles"
-    echo "  use <profile>  Switch to a profile"
-    echo "  current        Show current active profile"
+    echo "  list              List all available profiles"
+    echo "  use <profile>      Switch to a profile"
+    echo "  create <profile>  Create a new profile directory"
+    echo "  current           Show current active profile"
     echo "  delete <profile>  Delete a profile"
     echo ""
     echo "Examples:"
     echo "  ccsw list"
     echo "  ccsw use my-profile"
+    echo "  ccsw create new-profile"
     echo "  ccsw current"
     echo "  ccsw delete old-profile"
 }
@@ -47,6 +49,16 @@ main() {
                 return 1
             fi
             ccsw_use "$profile"
+            return $?
+            ;;
+        create)
+            local profile="${2:-}"
+            if [[ -z "$profile" ]]; then
+                log_error "Profile name required for create command"
+                echo "Usage: ccsw create <profile>" >&2
+                return 1
+            fi
+            ccsw_create "$profile"
             return $?
             ;;
         current)
