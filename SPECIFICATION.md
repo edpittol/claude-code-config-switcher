@@ -108,6 +108,10 @@ Add shell initialization snippet for `~/.bashrc` and `~/.zshrc` that loads the d
 
 Bash and Zsh completion for `ccsw` subcommands and profile names.
 
+### Phase 6: Docker QA environment
+
+Create a Docker environment that pre-installs all QA tools, eliminating the need for developers to install them locally.
+
 ## Directory strategy
 
 ```
