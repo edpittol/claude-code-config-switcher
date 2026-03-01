@@ -124,3 +124,7 @@ rm -rf "$HOME/.config/ccsw/configs/integration-test2" 2>/dev/null || true
 unset CLAUDE_CONFIG_DIR
 
 echo "✓ Integration test completed successfully!"
+
+
+
+

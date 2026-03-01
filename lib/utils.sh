@@ -103,3 +103,6 @@ ensure_config_dirs() {
         mkdir -p "$profiles_dir"
     fi
 }
+
+
+

@@ -4,6 +4,10 @@
 
 ## Codebase Patterns
 - Use `set -Eeuo pipefail` at top of all bash scripts for error handling
+- .shellcheckrc format: use `disable=SC2148` (no spaces around equals sign)
+- SC1134 errors occur when .shellcheckrc has invalid syntax - always test with `shellcheck file.sh` after changes
+- SC1091 warnings are informational when sourcing files - use `shellcheck -x` to include sourced files in analysis
+- Add missing utilities files when shellcheck reports SC1091 for sourcing
 - All profile validation uses strict regex: ^[a-zA-Z0-9_-]{1,64}$
 - Profile functions quote all paths to prevent injection attacks
 - Directories handled via environment variables: CCSW_CONFIG_DIR, CCSW_PROFILES_DIR
