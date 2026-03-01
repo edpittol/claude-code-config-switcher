@@ -197,3 +197,106 @@ ccsw/
 2. All scripts must pass shellcheck with zero errors
 3. Maintain state-free design principles
 4. Add appropriate error handling and exit codes
+
+## QA Tools
+
+### Unit Tests (Bats)
+
+The project uses [Bats](https://bats-core.readthedocs.io/) (Bash Automated Testing System) for unit testing.
+
+#### Prerequisites
+```bash
+# Install Bats (Ubuntu/Debian)
+sudo apt install bats
+
+# Or via GitHub
+git clone https://github.com/bats-core/bats-core.git
+cd bats-core
+sudo ./install.sh /usr/local
+```
+
+#### Running Tests
+
+```bash
+# Run all unit tests
+bats tests/
+
+# Run specific test file
+bats tests/test_core.bats
+bats tests/test_utils.bats
+
+# Run with verbose output
+bats -p tests/
+
+# Run specific test by name
+bats -f "ccsw_list" tests/
+```
+
+### Integration Tests
+
+Manual integration testing scripts are available in the `scripts/` directory:
+
+```bash
+# Run simple integration tests
+./scripts/integration_test_simple.sh
+
+# Run manual integration tests
+./scripts/manual_integration_test.sh
+
+# Run full integration test suite
+./scripts/test_integration.sh
+```
+
+### Shellcheck
+
+All shell scripts should pass shellcheck with zero errors:
+
+```bash
+# Check all shell scripts
+shellcheck bin/ccsw lib/*.sh scripts/*.sh
+
+# Check specific file
+shellcheck bin/ccsw
+```
+
+### EditorConfig
+
+Verify that all files conform to the EditorConfig settings:
+
+```bash
+# Install editorconfig-checker (if not already installed)
+go install github.com/editorconfig-checker/editorconfig-checker/cmd/editorconfig-checker@latest
+
+# Or via npm
+npm install -g editorconfig-checker
+
+# Check all files
+editorconfig-checker
+
+# Check specific directory
+editorconfig-checker bin/
+
+# Check specific file
+editorconfig-checker bin/ccsw
+```
+
+### Manual Testing
+
+For quick manual verification of state-free behavior:
+
+```bash
+# Create isolated test environment
+(
+  export CCSW_CONFIG_DIR=$(mktemp -d)
+  export CCSW_PROFILES_DIR="$CCSW_CONFIG_DIR/configs"
+  mkdir -p "$CCSW_PROFILES_DIR"
+
+  # Create test profile
+  mkdir -p "$CCSW_PROFILES_DIR/test"
+
+  # Test switching (requires subshell for isolation)
+  eval "$(bin/ccsw use test)" && echo "Active: $(bin/ccsw current)"
+
+  # Cleanup happens automatically when subshell exits
+)
+```
