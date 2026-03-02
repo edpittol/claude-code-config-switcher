@@ -112,12 +112,34 @@ Bash and Zsh completion for `ccsw` subcommands and profile names.
 
 Create a Docker environment that pre-installs all QA tools, eliminating the need for developers to install them locally.
 
+### Phase 7: build and bundling
+
+Create a `build/bundle.sh` script that concatenates all source files into a single executable `dist/ccsw`. This enables distribution as a standalone file without symlinks or external dependencies.
+
+**Deliverables:**
+- `build/bundle.sh` - Build script that bundles `lib/utils.sh`, `lib/core.sh`, and `bin/ccsw` into a single file
+- `dist/ccsw` - Generated bundled executable (gitignored)
+- Update `.gitignore` to exclude `dist/`
+
+**Bundle structure:**
+```bash
+#!/usr/bin/env bash
+set -Eeuo pipefail
+# --- BEGIN utils.sh ---
+# --- BEGIN core.sh ---
+# --- BEGIN ccsw ---
+```
+
 ## Directory strategy
 
 ```
 .
 ├── bin/
 │   └── ccsw
+├── build/
+│   └── bundle.sh
+├── dist/
+│   └── ccsw (generated, gitignored)
 ├── lib/
 │   ├── core.sh
 │   ├── check.sh
@@ -128,7 +150,7 @@ Create a Docker environment that pre-installs all QA tools, eliminating the need
 ├── .gitignore
 ├── .shellcheckrc
 ├── LICENSE.md
-└── README.md 
+└── README.md
 ```
 
 ## Benchmarking
