@@ -80,7 +80,7 @@ create_test_profile() {
     mkdir -p "$profile_dir"
 
     if [[ -n "$config_content" ]]; then
-        echo "$config_content" > "$profile_dir/config.json"
+        echo "$config_content" > "$profile_dir/settings.json"
     fi
 }
 

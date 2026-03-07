@@ -40,7 +40,7 @@ teardown() {
     export CLAUDE_CONFIG_DIR="$CCSW_PROFILES_DIR/test-profile"
 
     # Remove config file
-    rm -f "$CCSW_PROFILES_DIR/test-profile/config.json"
+    rm -f "$CCSW_PROFILES_DIR/test-profile/settings.json"
 
     run ccsw_check
 
@@ -72,7 +72,7 @@ teardown() {
     export CLAUDE_CONFIG_DIR="$CCSW_PROFILES_DIR/test-profile"
 
     # Update config with invalid URL
-    cat > "$CCSW_PROFILES_DIR/test-profile/config.json" << EOF
+    cat > "$CCSW_PROFILES_DIR/test-profile/settings.json" << EOF
 {
   "env": {
     "ANTHROPIC_BASE_URL": "not-a-valid-url"

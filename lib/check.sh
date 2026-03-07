@@ -197,12 +197,12 @@ read_anthropic_base_url() {
         return 1
     fi
 
-    # Config file path (assuming config.json exists)
-    config_file="${profile_dir}/config.json"
+    # Settings file path (Claude Code uses settings.json)
+    config_file="${profile_dir}/settings.json"
 
-    # Check if config file exists
+    # Check if settings file exists
     if [[ ! -f "$config_file" ]]; then
-        log_error "Config file not found: $config_file"
+        log_error "Settings file not found: $config_file"
         return 1
     fi
 
