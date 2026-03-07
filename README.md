@@ -198,7 +198,7 @@ ccsw/
 3. Maintain state-free design principles
 4. Add appropriate error handling and exit codes
 
-## QA Tools
+## QA
 
 ### Unit Tests (Bats)
 

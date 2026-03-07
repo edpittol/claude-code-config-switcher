@@ -2,28 +2,27 @@
 
 You are an autonomous coding agent working on a software project.
 
-## ShellCheck Configuration Pattern
-- .shellcheckrc format: use `disable=SC2148` (no spaces around equals sign)
-- SC1134 errors occur when .shellcheckrc has invalid syntax - always test with `shellcheck file.sh` after changes
-- SC1091 warnings are informational when sourcing files - use `shellcheck -x` to include sourced files in analysis
+## Files reference
+
+The files `prd.json` and `progress.txt` cited in this document are present in the SAME directory as the `ralph.sh` script.
 
 ## Your Task
 
 1. Run quality checks to ensure that you are starting in a green state
-2. Read the PRD at `prd.json` (in the same directory as this file)
+2. Read the PRD at `prd.json`
 3. Read the progress log at `progress.txt` (check Codebase Patterns section first)
 4. Check you are on the correct branch from PRD `branchName`. If not, check it out or create from main.
 5. Pick the **highest priority** user story where `passes: false`
-6. Implement that single user story
-7. Run quality checks (e.g., typecheck, lint, test - use whatever your project requires)
-8. Update CLAUDE.md files if you discover reusable patterns (see below)
-9. If checks pass, commit ALL changes with message: `feat: [Story ID] - [Story Title]`
+6. Implement that SINGLE user story
+7. Run automatic quality checks present in the section `QA` of the project `README.md`. 
+8. Update `CLAUDE.md` files if you discover reusable patterns (see below)
+9. If checks pass, commit ALL UNIQUE user story changes with message: `feat: [Story ID] - [Story Title]`
 10. Update the PRD to set `passes: true` for the completed story
 11. Append your progress to `progress.txt`
 
 ## Progress Report Format
 
-APPEND to progress.txt (never replace, always append):
+APPEND to `progress.txt` (never replace, always append):
 ```
 ## [Date/Time] - [Story ID]
 - What was implemented
@@ -39,7 +38,7 @@ The learnings section is critical - it helps future iterations avoid repeating m
 
 ## Consolidate Patterns
 
-If you discover a **reusable pattern** that future iterations should know, add it to the `## Codebase Patterns` section at the TOP of progress.txt (create it if it doesn't exist). This section should consolidate the most important learnings:
+If you discover a **reusable pattern** that future iterations should know, add it to the `## Codebase Patterns` section at the TOP of `progress.txt` (create it if it doesn't exist). This section should consolidate the most important learnings:
 
 ```
 ## Codebase Patterns
@@ -72,26 +71,15 @@ Before committing, check if any edited files have learnings worth preserving in 
 **Do NOT add:**
 - Story-specific implementation details
 - Temporary debugging notes
-- Information already in progress.txt
+- Information already in `progress.txt`
 
-Only update CLAUDE.md if you have **genuinely reusable knowledge** that would help future work in that directory.
+Only update `CLAUDE.md` if you have **genuinely reusable knowledge** that would help future work in that directory.
 
 ## Quality Requirements
 
-- ALL commits must pass your project's quality checks (lint, test). The QA process is documented on REAME.md. Manual steps should be ignored.
-- Do NOT commit broken code
+- Do NOT commit code failing the QA process
 - Keep changes focused and minimal
 - Follow existing code patterns
-
-## Browser Testing (If Available)
-
-For any story that changes UI, verify it works in the browser if you have browser testing tools configured (e.g., via MCP):
-
-1. Navigate to the relevant page
-2. Verify the UI changes work as expected
-3. Take a screenshot if helpful for the progress log
-
-If no browser tools are available, note in your progress report that manual browser verification is needed.
 
 ## Stop Condition
 
@@ -102,9 +90,9 @@ If ALL stories are complete and passing, reply with:
 
 If there are still stories with `passes: false`, end your response normally (another iteration will pick up the next story).
 
-## Important
+## IMPORTANT
 
 - Work on ONE story per iteration
-- Commit frequently
+- Commit every completed story
 - Keep CI green
-- Read the Codebase Patterns section in progress.txt before starting
+- Read the Codebase Patterns section in `progress.txt` before starting
