@@ -120,17 +120,15 @@ EOF
 }
 
 @test "detect_network_tool function" {
-    # Test with tcpdump available
-    command -v tcpdump >/dev/null 2>&1 && {
+    # Test with tcpdump available (takes precedence)
+    if command -v tcpdump >/dev/null 2>&1; then
         run detect_network_tool
         [ "$output" == "tcpdump" ]
-    }
-
-    # Test with ss available
-    command -v ss >/dev/null 2>&1 && {
+    # Test with ss available (only if tcpdump is not available)
+    elif command -v ss >/dev/null 2>&1; then
         run detect_network_tool
         [ "$output" == "ss" ]
-    }
+    fi
 }
 
 @test "check_sudo_privileges function" {
