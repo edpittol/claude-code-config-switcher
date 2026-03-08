@@ -202,7 +202,7 @@ read_anthropic_base_url() {
 
     # Check if settings file exists
     if [[ ! -f "$config_file" ]]; then
-        log_error "Settings file not found: $config_file"
+        log_error "ANTHROPIC_BASE_URL not found: $config_file"
         return 1
     fi
 
