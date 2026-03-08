@@ -3,6 +3,7 @@
 *.swp
 coverage/
 progress.txt
+scripts/ralph/.worktrees/
 scripts/ralph/archive/
 scripts/ralph/.last-branch
 scripts/ralph/prd.json
