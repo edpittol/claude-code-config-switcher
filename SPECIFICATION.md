@@ -44,7 +44,6 @@ ccsw use <profile> — switch profile
 ccsw list — list profiles
 ccsw create <profile> — create profile directory and output its path
 ccsw current — show active profile
-ccsw check — verify network traffic matches ANTHROPIC_BASE_URL (requires sudo)
 ccsw delete <profile> — remove profile
 ```
 
@@ -105,24 +104,9 @@ Apply YAGNI in every phase: only implement what is required by that phase accept
 - Error handling for existing directories and invalid inputs
 - Path output is deterministic for automation
 
-### Phase 3: endpoint check ✅ COMPLETED
+### Phase 3: endpoint check ❌ CANCELLED
 
-**Status: COMPLETED** - All Phase 3 user stories have been implemented successfully.
-
-**Completed User Stories:**
-- US-015: Implement ccsw_check command for network verification
-- US-016: Implement ANTHROPIC_BASE_URL reading from active profile
-- US-017: Implement sudo requirement check
-- US-018: Implement network traffic verification using ss/tcpdump
-
-**Deviations from Original Specification:**
-- No significant deviations from the original specification
-
-**Implementation Details:**
-- Requires sudo privileges for network inspection
-- Reads ANTHROPIC_BASE_URL from active profile's config directory
-- Uses network inspection tools (ss/tcpdump) for traffic verification
-- Provides clear error messages for insufficient permissions
+**Status: CANCELLED** - The network verification feature proved too complex with no simple solution. Requires sudo privileges and network inspection tools (tcpdump/ss) which are not always available. The feature was not deemed practical for a simple profile management tool.
 
 ### Phase 4: bashrc integration
 
@@ -166,7 +150,6 @@ set -Eeuo pipefail
 │   └── ccsw (generated, gitignored)
 ├── lib/
 │   ├── core.sh
-│   ├── check.sh
 │   └── utils.sh
 ├── docs/
 ├── tests/
