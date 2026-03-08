@@ -11,7 +11,7 @@ The files `prd.json` and `progress.txt` cited in this document are present in th
 1. Run quality checks to ensure that you are starting in a green state
 2. Read the PRD at `prd.json`
 3. Read the progress log at `progress.txt` (check Codebase Patterns section first)
-4. Check you are on the correct branch from PRD `branchName`. If not, check it out or create from main.
+4. The worktree has been automatically created for the correct branch. Work in the current directory.
 5. Pick the **highest priority** user story where `passes: false`
 6. Implement that SINGLE user story
 7. Run automatic quality checks present in the section `QA` of the project `README.md`.

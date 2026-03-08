@@ -2,7 +2,7 @@
 # Ralph Wiggum - Long-running AI agent loop
 # Usage: ./ralph.sh [--tool amp|claude] [max_iterations]
 
-set -e
+set -Eeuo pipefail
 
 # Parse arguments
 TOOL="amp"  # Default to amp for backwards compatibility
@@ -38,6 +38,9 @@ PRD_FILE="$SCRIPT_DIR/prd.json"
 PROGRESS_FILE="$SCRIPT_DIR/progress.txt"
 ARCHIVE_DIR="$SCRIPT_DIR/archive"
 LAST_BRANCH_FILE="$SCRIPT_DIR/.last-branch"
+WORKTREES_DIR="$SCRIPT_DIR/.worktrees"
+WORKTREE_NAME=""
+WORKTREE_PATH=""
 
 # Archive previous run if branch changed
 if [ -f "$PRD_FILE" ] && [ -f "$LAST_BRANCH_FILE" ]; then
@@ -70,6 +73,42 @@ if [ -f "$PRD_FILE" ]; then
   if [ -n "$CURRENT_BRANCH" ]; then
     echo "$CURRENT_BRANCH" > "$LAST_BRANCH_FILE"
   fi
+fi
+
+# Worktree setup
+if [ -f "$PRD_FILE" ]; then
+  BRANCH_NAME=$(jq -r '.branchName // empty' "$PRD_FILE" 2>/dev/null || echo "")
+
+  if [ -n "$BRANCH_NAME" ]; then
+    WORKTREE_NAME="ralph-${BRANCH_NAME#ralph/}"
+    WORKTREE_PATH="$WORKTREES_DIR/$WORKTREE_NAME"
+
+    # Create worktrees directory
+    mkdir -p "$WORKTREES_DIR"
+
+    # Check if worktree already exists
+    if [ -d "$WORKTREE_PATH" ]; then
+      echo "Reusing existing worktree: $WORKTREE_PATH"
+    else
+      # Create new worktree from main branch
+      echo "Creating worktree at: $WORKTREE_PATH"
+      if ! git worktree add "$WORKTREE_PATH" -b "$BRANCH_NAME" 2>/dev/null; then
+        # Branch may already exist remotely, try checkout
+        echo "Branch already exists, checking out..."
+        git fetch origin "$BRANCH_NAME" 2>/dev/null || true
+        git worktree add "$WORKTREE_PATH" "$BRANCH_NAME"
+      fi
+      echo "Worktree created successfully"
+    fi
+
+    # Change to worktree directory
+    cd "$WORKTREE_PATH" || exit 1
+    echo "Working in worktree: $WORKTREE_PATH (branch: $(git branch --show-current))"
+  else
+    echo "Warning: No branchName found in prd.json, working in current directory"
+  fi
+else
+  echo "Warning: prd.json not found, working in current directory"
 fi
 
 # Initialize progress file if it doesn't exist
