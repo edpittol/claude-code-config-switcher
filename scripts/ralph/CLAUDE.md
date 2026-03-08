@@ -94,5 +94,6 @@ If there are still stories with `passes: false`, end your response normally (ano
 
 - Work on ONE story per iteration
 - Commit every completed story
+- Don't add the `progress.txt` and `prd.json` files to the repository
 - Keep CI green
 - Read the Codebase Patterns section in `progress.txt` before starting
