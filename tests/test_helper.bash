@@ -11,7 +11,6 @@ export PATH="$LIB_DIR:$PATH"
 # Source core functions for testing
 source "$(dirname "${BASH_SOURCE[0]}")/../lib/utils.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/../lib/core.sh"
-source "$(dirname "${BASH_SOURCE[0]}")/../lib/check.sh"
 
 # Test utilities
 

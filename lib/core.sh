@@ -2,9 +2,8 @@
 
 set -Eeuo pipefail
 
-# Source utility and check functions
+# Source utility functions
 source "$(dirname "${BASH_SOURCE[0]}")/utils.sh"
-source "$(dirname "${BASH_SOURCE[0]}")/check.sh"
 
 # List all available profiles sorted alphabetically
 ccsw_list() {
@@ -164,53 +163,3 @@ ccsw_delete() {
     return 0
 }
 
-# Check network traffic for active profile
-ccsw_check() {
-    local current_profile
-    local anthropic_url
-    local hostname
-    local network_tool
-
-    # Get current active profile
-    if ! current_profile=$(ccsw_current 2>/dev/null); then
-        log_error "Failed to get current profile"
-        return 1
-    fi
-
-    if [[ -z "$current_profile" ]] || [[ "$current_profile" == "No active profile" ]]; then
-        log_error "No active profile found. Please use a profile first."
-        return 2
-    fi
-
-    log_info "Checking network traffic for profile: $current_profile"
-
-    # Read ANTHROPIC_BASE_URL from profile config
-    if ! anthropic_url=$(read_anthropic_base_url "$current_profile"); then
-        return 1
-    fi
-
-    # Parse hostname from URL
-    hostname=$(parse_url_hostname "$anthropic_url")
-    if [[ -z "$hostname" ]]; then
-        log_error "Failed to parse hostname from URL: $anthropic_url"
-        return 1
-    fi
-
-    log_info "Checking traffic to: $hostname"
-
-    # Detect available network tool
-    network_tool=$(detect_network_tool)
-    if [[ -z "$network_tool" ]]; then
-        log_error "No supported network tool found. Please install tcpdump or ss."
-        return 1
-    fi
-
-    # Check network traffic
-    if ! check_network_traffic "$hostname" "$network_tool"; then
-        log_error "Network verification failed: No traffic detected to $hostname"
-        return 1
-    fi
-
-    log_info "Network verification successful"
-    return 0
-}
