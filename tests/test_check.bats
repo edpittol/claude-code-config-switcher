@@ -83,7 +83,9 @@ EOF
     run ccsw_check
 
     [ "$status" -eq 1 ]
-    [[ "$output" == *"Failed to parse hostname"* ]]
+    # The function parses the hostname and attempts network verification,
+    # which fails because no traffic is detected to the invalid hostname
+    [[ "$output" == *"Network verification failed"* ]]
 }
 
 @test "ccsw_check missing network tools" {

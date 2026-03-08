@@ -67,8 +67,8 @@ check_traffic_with_tcpdump() {
     local temp_file
     temp_file=$(mktemp)
 
-    # Set trap to clean up
-    trap 'rm -f "$temp_file"' EXIT
+    # Set trap to clean up (use ${temp_file-} to avoid unbound variable error with set -u)
+    trap 'rm -f "${temp_file:-}"' EXIT
 
     # Run tcpdump in background
     local tcpdump_cmd="sudo tcpdump -i $interface -c 1 -w $temp_file host $hostname 2>/dev/null &"
