@@ -1,0 +1,116 @@
+# Claude Code config switcher
+
+## Problem
+
+Claude Code doesn't support profile management.
+
+## Objective
+
+Create a script that manage many profiles for Claude Code. It will allow Claude Code CLI and another tools like VSCode extension with multiples Claude Code accounts and another providers that can be connected with Claude Code like z.ai.
+
+The strategy is manage the OS environment variable `CLAUDE_CONFIG_DIR`.
+
+## Functionalities
+
+- Change Claude code OS environment variables based on profiles
+- Command to load a profile using eval
+- Integration with `~/.bashrc` and `~/.zshrc` to load the default profile
+- The unique OS environment variable managed by the script is `CLAUDE_CONFIG_DIR`
+- Command for sudoer user check if network communication is being traffic by the same URL defined on `ANTHROPIC_BASE_URL`
+
+## Non-functional requisites
+
+- Focus to manage environment variables, no models router needed
+- Written in Bash
+- Use QA tools like shellcheck and editorconfig
+- Profiles are a Claude Code config directory. The directories are stored `~/.config/ccsw/configs/`
+- Unit test should be implemented using `bats-core`
+
+## Development practices
+
+- DRY: avoid duplicated logic, constants, and command handling.
+- KISS: prefer simple and readable solutions over abstractions.
+- YAGNI: implement only what is required for the current phase.
+- Fail fast: validate inputs early and return clear errors with non-zero exit codes.
+- Idempotency: operations like create/setup should be safe to run multiple times.
+- Single responsibility per function: each function should do one clear task.
+- Defensive Bash defaults: use strict mode (`set -euo pipefail`) and safe quoting.
+- Deterministic output: command output must be stable and predictable for automation and tests.
+
+## Command list
+
+```bash
+ccsw use <profile> — switch profile
+ccsw list — list profiles
+ccsw create <profile> — create profile directory and output its path
+ccsw current — show active profile
+ccsw check — verify network traffic matches ANTHROPIC_BASE_URL (requires sudo)
+ccsw delete <profile> — remove profile
+```
+
+## Installation
+
+Manual symlink of `bin/ccsw` to a directory in `$PATH` (e.g. `~/.local/bin/`).
+
+## Implementation phases
+
+Apply YAGNI in every phase: only implement what is required by that phase acceptance criteria.
+
+### Phase 1: core profile CRUD
+
+Implement `use`, `list`, `current`, and `delete` commands. Each profile is a directory under `~/.config/ccsw/configs/<profile>/` that serves as a `CLAUDE_CONFIG_DIR`. The `use` command outputs `export CLAUDE_CONFIG_DIR=<path>` for eval.
+
+### Phase 2: interactive creator
+
+Implement `create` command. Creates the profile directory under `~/.config/ccsw/configs/<profile>/` and outputs the path.
+
+### Phase 3: endpoint check
+
+Implement `check` command. Requires sudo. Reads `ANTHROPIC_BASE_URL` from the active profile's config directory and uses network inspection (e.g. `ss` or `tcpdump`) to verify that Claude Code traffic is going to the expected endpoint.
+
+### Phase 4: bashrc integration
+
+Add shell initialization snippet for `~/.bashrc` and `~/.zshrc` that loads the default profile on shell startup via eval.
+
+### Phase 5: tab completion
+
+Bash and Zsh completion for `ccsw` subcommands and profile names.
+
+## Directory strategy
+
+```
+.
+├── bin/
+│   └── ccsw
+├── lib/
+│   ├── core.sh
+│   ├── check.sh
+│   └── utils.sh
+├── docs/
+├── tests/
+├── .editorconfig
+├── .gitignore
+├── .shellcheckrc
+├── LICENSE.md
+└── README.md 
+```
+
+## Benchmarking
+
+### Claude Code Router
+
+https://github.com/musistudio/claude-code-router
+
+It is a nice tool. But it is more advanced than what I am proposing. I don't need a router. And I felt missing an option to use an Anthropic Claude Code account instead the router service.
+
+### CCS - Claude Code Switch
+
+https://github.com/kaitranntt/ccs
+
+Great service. But advanced and paid. I didn't explore it a lot, but it seems to have a environment variables management like I want.
+
+### Claude Env (ccx or ccsw-cli)
+
+https://github.com/bhadraagada/ccenv-cli
+
+Another awesome project. It almost meets my needs. What unique thing I miss on this is the missing of separation of CLAUDE_CONFIG_DIR among the profiles.
