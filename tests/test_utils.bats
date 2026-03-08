@@ -2,40 +2,69 @@
 
 # Source the utility functions
 load '../lib/utils.sh'
+# Load test helper with stderr capture
+source 'test_helper.bash'
 
 @test "log_info outputs to stderr with INFO: prefix" {
-    run log_info "test message"
+    run_with_stderr_capture log_info "test message"
+    local output
+    local stderr
+    local status
+    output=$(get_captured_output)
+    stderr=$(get_captured_stderr)
+    status=$(get_captured_status)
     [ "$status" -eq 0 ]
-    [[ "$output" == *"INFO: test message" ]]
-    [ "$stderr" == "" ]
+    [[ "$stderr" == *"INFO: test message"* ]]
+    [ "$output" == "" ]
 }
 
 @test "log_warn outputs to stderr with WARN: prefix" {
-    run log_warn "test warning"
+    run_with_stderr_capture log_warn "test warning"
+    local output
+    local stderr
+    local status
+    output=$(get_captured_output)
+    stderr=$(get_captured_stderr)
+    status=$(get_captured_status)
     [ "$status" -eq 0 ]
-    [[ "$output" == *"WARN: test warning" ]]
-    [ "$stderr" == "" ]
+    [[ "$stderr" == *"WARN: test warning"* ]]
+    [ "$output" == "" ]
 }
 
 @test "log_error outputs to stderr with ERROR: prefix" {
-    run log_error "test error"
+    run_with_stderr_capture log_error "test error"
+    local output
+    local stderr
+    local status
+    output=$(get_captured_output)
+    stderr=$(get_captured_stderr)
+    status=$(get_captured_status)
     [ "$status" -eq 0 ]
-    [[ "$output" == *"ERROR: test error" ]]
-    [ "$stderr" == "" ]
+    [[ "$stderr" == *"ERROR: test error"* ]]
+    [ "$output" == "" ]
 }
 
 @test "log_debug outputs only when DEBUG=1" {
     # Test with DEBUG=0 (default)
-    run log_debug "debug message"
+    run_with_stderr_capture log_debug "debug message"
+    local output
+    local stderr
+    local status
+    output=$(get_captured_output)
+    stderr=$(get_captured_stderr)
+    status=$(get_captured_status)
     [ "$status" -eq 0 ]
-    [ "$output" == "" ]
     [ "$stderr" == "" ]
+    [ "$output" == "" ]
 
     # Test with DEBUG=1
-    DEBUG=1 run log_debug "debug message"
+    DEBUG=1 run_with_stderr_capture log_debug "debug message"
+    output=$(get_captured_output)
+    stderr=$(get_captured_stderr)
+    status=$(get_captured_status)
     [ "$status" -eq 0 ]
-    [[ "$output" == *"DEBUG: debug message" ]]
-    [ "$stderr" == "" ]
+    [[ "$stderr" == *"DEBUG: debug message"* ]]
+    [ "$output" == "" ]
 }
 
 @test "validate_profile_name accepts valid names" {

@@ -14,6 +14,12 @@ source "$(dirname "${BASH_SOURCE[0]}")/../lib/core.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/../lib/check.sh"
 
 # Test utilities
+
+# Initialize stderr for tests (fixes unbound variable errors)
+init_test_env() {
+    export stderr=""
+}
+
 setup_test_environment() {
     # Create temporary test directory
     TEST_TEMP_DIR="$(mktemp -d)"
@@ -89,4 +95,41 @@ set_active_profile() {
     local profile_name="$1"
     local profile_dir="$CCSW_PROFILES_DIR/$profile_name"
     export CLAUDE_CONFIG_DIR="$profile_dir"
+}
+
+# Helper function to run command and capture stderr
+# This enables proper stderr testing in bats tests
+run_with_stderr_capture() {
+    # Use temp files to capture stdout and stderr separately
+    local stdout_file
+    local stderr_file
+    stdout_file=$(mktemp)
+    stderr_file=$(mktemp)
+
+    # Run the command, capturing stdout and stderr separately
+    "$@" > "$stdout_file" 2> "$stderr_file"
+
+    # Store results in temp files for later reading
+    _bats_run_stdout=$stdout_file
+    _bats_run_stderr=$stderr_file
+    _bats_run_status=$?
+
+    # Clean up will happen when variables are read
+}
+
+# Get the output from the last run_with_stderr_capture
+get_captured_output() {
+    cat "$_bats_run_stdout"
+    rm -f "$_bats_run_stdout"
+}
+
+# Get the stderr from the last run_with_stderr_capture
+get_captured_stderr() {
+    cat "$_bats_run_stderr"
+    rm -f "$_bats_run_stderr"
+}
+
+# Get the status from the last run_with_stderr_capture
+get_captured_status() {
+    echo "$_bats_run_status"
 }
