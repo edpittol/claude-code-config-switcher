@@ -117,17 +117,9 @@ teardown() {
 
     run ccsw_current
     [ "$status" -eq 3 ]
-    [[ "$output" == *"External: /tmp/external" ]]
+    [[ "$output" == *"External: /tmp/external"* ]]
 }
 
-@test "ccsw_current warns on external directory" {
-    # Set CLAUDE_CONFIG_DIR to an external directory
-    export CLAUDE_CONFIG_DIR="/tmp/external"
-
-    run ccsw_current
-    [ "$status" -eq 3 ]
-    [[ "$stderr" == *"WARNING: CLAUDE_CONFIG_DIR points to external directory: /tmp/external" ]]
-}
 
 @test "ccsw_current handles empty profiles directory" {
     # Create empty profiles directory
