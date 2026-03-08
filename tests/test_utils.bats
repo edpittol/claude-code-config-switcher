@@ -2,8 +2,7 @@
 
 # Source the utility functions
 load '../lib/utils.sh'
-# Load test helper with stderr capture
-source 'test_helper.bash'
+load 'test_helper'
 
 @test "log_info outputs to stderr with INFO: prefix" {
     run_with_stderr_capture log_info "test message"
@@ -18,7 +17,7 @@ source 'test_helper.bash'
     [ "$output" == "" ]
 }
 
-@test "log_warn outputs to stderr with WARN: prefix" {
+@test "log_warn outputs to stderr with WARNING: prefix" {
     run_with_stderr_capture log_warn "test warning"
     local output
     local stderr
@@ -27,7 +26,7 @@ source 'test_helper.bash'
     stderr=$(get_captured_stderr)
     status=$(get_captured_status)
     [ "$status" -eq 0 ]
-    [[ "$stderr" == *"WARN: test warning"* ]]
+    [[ "$stderr" == *"WARNING: test warning"* ]]
     [ "$output" == "" ]
 }
 

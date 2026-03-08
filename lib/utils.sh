@@ -8,7 +8,7 @@ log_info() {
 }
 
 log_warn() {
-    echo "WARN: $1" >&2
+    echo "WARNING: $1" >&2
 }
 
 log_error() {
