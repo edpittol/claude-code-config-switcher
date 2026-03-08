@@ -87,22 +87,22 @@ Implement the **`ccsw create`** command that creates profile directories under `
 │  │              │  │ Dispatch     │  │ Generation   │      │
 │  └──────────────┘  └──────────────┘  └──────────────┘      │
 └─────────────────────────────────────────────────────────────┘
-         │                        │
-         ▼                        ▼
+          │                        │
+          ▼                        ▼
 ┌─────────────────┐    ┌─────────────────────────────────┐
 │  lib/utils.sh   │    │         lib/core.sh              │
 │  - Logging      │    │  - ccsw_list()                   │
 │  - Validation   │    │  - ccsw_use()                    │
 │  - Path utils   │    │  - ccsw_current()                │
 └─────────────────┘    │  - ccsw_delete()                 │
-                       │  - ccsw_create() ← NEW           │
-                       └─────────────────────────────────┘
+                        │  - ccsw_create() ← NEW           │
+                        └─────────────────────────────────┘
                                       │
                                       ▼
-                       ┌─────────────────────────────────┐
-                       │        Filesystem               │
-                       │  ~/.config/ccsw/configs/        │
-                       └─────────────────────────────────┘
+                        ┌─────────────────────────────────┐
+                        │        Filesystem               │
+                        │  ~/.config/ccsw/configs/        │
+                        └─────────────────────────────────┘
 ```
 
 ### Data Flow

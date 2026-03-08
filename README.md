@@ -11,14 +11,14 @@ A state-free Bash CLI tool for managing multiple Claude Code configurations.
 ### Setup
 1. Clone or download the ccsw project
 2. Place the `bin/ccsw` executable in your PATH:
-   ```bash
-   # Copy to a directory in your PATH
-   cp ccsw/bin/ccsw /usr/local/bin/
+  ```bash
+  # Copy to a directory in your PATH
+  cp ccsw/bin/ccsw /usr/local/bin/
 
-   # Or make it executable and add to PATH
-   chmod +x ccsw/bin/ccsw
-   export PATH="$PATH:/path/to/ccsw/bin"
-   ```
+  # Or make it executable and add to PATH
+  chmod +x ccsw/bin/ccsw
+  export PATH="$PATH:/path/to/ccsw/bin"
+  ```
 
 ## Usage
 
@@ -253,10 +253,10 @@ All shell scripts should pass shellcheck with zero errors:
 
 ```bash
 # Check all shell scripts
-shellcheck bin/ccsw lib/*.sh scripts/*.sh
+shellcheck -x bin/ccsw lib/*.sh scripts/*.sh
 
 # Check specific file
-shellcheck bin/ccsw
+shellcheck -x bin/ccsw
 ```
 
 ### EditorConfig

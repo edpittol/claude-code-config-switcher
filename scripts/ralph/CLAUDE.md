@@ -14,7 +14,7 @@ The files `prd.json` and `progress.txt` cited in this document are present in th
 4. Check you are on the correct branch from PRD `branchName`. If not, check it out or create from main.
 5. Pick the **highest priority** user story where `passes: false`
 6. Implement that SINGLE user story
-7. Run automatic quality checks present in the section `QA` of the project `README.md`. 
+7. Run automatic quality checks present in the section `QA` of the project `README.md`.
 8. Update `CLAUDE.md` files if you discover reusable patterns (see below)
 9. If checks pass, commit ALL UNIQUE user story changes with message: `feat: [Story ID] - [Story Title]`
 10. Update the PRD to set `passes: true` for the completed story
@@ -56,11 +56,11 @@ Before committing, check if any edited files have learnings worth preserving in 
 1. **Identify directories with edited files** - Look at which directories you modified
 2. **Check for existing CLAUDE.md** - Look for CLAUDE.md in those directories or parent directories
 3. **Add valuable learnings** - If you discovered something future developers/agents should know:
-   - API patterns or conventions specific to that module
-   - Gotchas or non-obvious requirements
-   - Dependencies between files
-   - Testing approaches for that area
-   - Configuration or environment requirements
+  - API patterns or conventions specific to that module
+  - Gotchas or non-obvious requirements
+  - Dependencies between files
+  - Testing approaches for that area
+  - Configuration or environment requirements
 
 **Examples of good CLAUDE.md additions:**
 - "When modifying X, also update Y to keep them in sync"
