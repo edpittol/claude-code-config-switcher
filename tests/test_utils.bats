@@ -103,13 +103,13 @@ load 'test_helper'
 }
 
 @test "validate_profile_name rejects names >64 characters" {
-    # Test long name
-    local long_name="abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghij"
+    # Test name >64 characters (65 chars)
+    local long_name="abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklm"
     run validate_profile_name "$long_name"
     [ "$status" -eq 1 ]
 
     # Test exactly 64 characters
-    local exact_name="abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdef"
+    local exact_name="abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl"
     run validate_profile_name "$exact_name"
     [ "$status" -eq 0 ]
 }
