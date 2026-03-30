@@ -5,11 +5,18 @@ set -Eeuo pipefail
 
 echo "=== ccsw Integration Test ==="
 
+# Create temporary test directory
+TEST_TEMP_DIR=$(mktemp -d)
+export CCSW_CONFIG_DIR="$TEST_TEMP_DIR"
+export CCSW_PROFILES_DIR="$TEST_TEMP_DIR/configs"
+
+echo "Using temporary test directory: $TEST_TEMP_DIR"
+
 # Test 1: Create test profiles
 echo ""
 echo "1. Creating test profiles..."
-mkdir -p "$HOME/.config/ccsw/configs/test-profile1"
-mkdir -p "$HOME/.config/ccsw/configs/test-profile2"
+mkdir -p "$CCSW_PROFILES_DIR/test-profile1"
+mkdir -p "$CCSW_PROFILES_DIR/test-profile2"
 echo "✓ Created test-profile1 and test-profile2"
 
 # Test 2: List profiles
@@ -36,10 +43,12 @@ echo "✓ Current profile command executed"
 # Test 5: Verify CLAUDE_CONFIG_DIR
 echo ""
 echo "5. Verifying CLAUDE_CONFIG_DIR..."
-if [[ "$CLAUDE_CONFIG_DIR" == "$HOME/.config/ccsw/configs/test-profile1" ]]; then
+if [[ "$CLAUDE_CONFIG_DIR" == "$TEST_TEMP_DIR/configs/test-profile1" ]]; then
     echo "✓ CLAUDE_CONFIG_DIR is correct"
 else
     echo "✗ CLAUDE_CONFIG_DIR is incorrect"
+    echo "Expected: $TEST_TEMP_DIR/configs/test-profile1"
+    echo "Actual: $CLAUDE_CONFIG_DIR"
     exit 1
 fi
 
@@ -59,8 +68,10 @@ echo ""
 echo "7. Testing ccsw delete active profile..."
 echo "Attempting to delete test-profile1 (active)..."
 echo "Command: ./bin/ccsw delete test-profile1"
-./bin/ccsw delete test-profile1 || true
+set +e
+./bin/ccsw delete test-profile1
 EXIT_CODE=$?
+set -e
 echo "Exit code: $EXIT_CODE"
 if [[ $EXIT_CODE -eq 2 ]]; then
     echo "✓ Correctly prevented deletion of active profile (exit code 2)"
@@ -74,8 +85,10 @@ echo ""
 echo "8. Testing external directory detection..."
 export CLAUDE_CONFIG_DIR="/tmp/external"
 echo "Set CLAUDE_CONFIG_DIR to /tmp/external"
+set +e
 ./bin/ccsw current
 EXIT_CODE=$?
+set -e
 if [[ $EXIT_CODE -eq 3 ]]; then
     echo "✓ Correctly detected external directory (exit code 3)"
 else
@@ -105,9 +118,10 @@ echo "=== All integration tests passed! ==="
 
 # Cleanup
 echo "Cleaning up..."
-rm -rf "$HOME/.config/ccsw/configs/test-profile1"
-rm -rf "$HOME/.config/ccsw/configs/test-profile2" 2>/dev/null || true
+rm -rf "$TEST_TEMP_DIR"
 unset CLAUDE_CONFIG_DIR
+unset CCSW_CONFIG_DIR
+unset CCSW_PROFILES_DIR
 
 echo "✓ Integration test completed successfully!"
 
