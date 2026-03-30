@@ -9,10 +9,18 @@ echo "=== ccsw Manual Integration Test ==="
 echo "Date: $(date)"
 echo ""
 
+# Create temporary test directory
+TEST_TEMP_DIR=$(mktemp -d)
+export CCSW_CONFIG_DIR="$TEST_TEMP_DIR"
+export CCSW_PROFILES_DIR="$TEST_TEMP_DIR/configs"
+
+echo "Using temporary test directory: $TEST_TEMP_DIR"
+echo ""
+
 # Setup: Create test profiles
 echo "1. Setting up test profiles..."
-mkdir -p "$HOME/.config/ccsw/configs/integration-test1"
-mkdir -p "$HOME/.config/ccsw/configs/integration-test2"
+mkdir -p "$CCSW_PROFILES_DIR/integration-test1"
+mkdir -p "$CCSW_PROFILES_DIR/integration-test2"
 echo "✓ Created integration-test1 and integration-test2"
 echo ""
 
@@ -39,10 +47,12 @@ echo ""
 
 # Test 4: Verify CLAUDE_CONFIG_DIR
 echo "5. Verifying CLAUDE_CONFIG_DIR..."
-if [[ "$CLAUDE_CONFIG_DIR" == "$HOME/.config/ccsw/configs/integration-test1" ]]; then
+if [[ "$CLAUDE_CONFIG_DIR" == "$TEST_TEMP_DIR/configs/integration-test1" ]]; then
     echo "✓ CLAUDE_CONFIG_DIR is correct"
 else
     echo "✗ CLAUDE_CONFIG_DIR is incorrect"
+    echo "Expected: $TEST_TEMP_DIR/configs/integration-test1"
+    echo "Actual: $CLAUDE_CONFIG_DIR"
     exit 1
 fi
 echo ""
@@ -62,8 +72,10 @@ echo ""
 echo "7. Testing ccsw delete active profile..."
 echo "Attempting to delete integration-test1 (active)..."
 echo "Command: ./bin/ccsw delete integration-test1"
-./bin/ccsw delete integration-test1 || true
+set +e
+./bin/ccsw delete integration-test1
 EXIT_CODE=$?
+set -e
 echo "Exit code: $EXIT_CODE"
 if [[ $EXIT_CODE -eq 2 ]]; then
     echo "✓ Correctly prevented deletion of active profile (exit code 2)"
@@ -78,8 +90,10 @@ echo "8. Testing external directory detection..."
 export CLAUDE_CONFIG_DIR="/tmp/external"
 echo "Set CLAUDE_CONFIG_DIR to /tmp/external"
 echo "Command: ./bin/ccsw current"
-./bin/ccsw current || true
+set +e
+./bin/ccsw current
 EXIT_CODE=$?
+set -e
 echo "Exit code: $EXIT_CODE"
 if [[ $EXIT_CODE -eq 3 ]]; then
     echo "✓ Correctly detected external directory (exit code 3)"
@@ -119,9 +133,10 @@ echo "=== Manual Integration Test Completed Successfully! ==="
 
 # Cleanup
 echo "Cleaning up..."
-rm -rf "$HOME/.config/ccsw/configs/integration-test1"
-rm -rf "$HOME/.config/ccsw/configs/integration-test2" 2>/dev/null || true
+rm -rf "$TEST_TEMP_DIR"
 unset CLAUDE_CONFIG_DIR
+unset CCSW_CONFIG_DIR
+unset CCSW_PROFILES_DIR
 
 echo "✓ Integration test completed successfully!"
 
