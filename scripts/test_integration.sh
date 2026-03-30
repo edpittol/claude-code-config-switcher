@@ -11,9 +11,18 @@ TEST_DIR="/tmp/ccsw-test-$$"
 echo "Starting ccsw integration tests..."
 echo "Project root: $PROJECT_ROOT"
 
-# Ensure ccsw is executable and in PATH
-export PATH="$PROJECT_ROOT/bin:$PATH"
-CCSW_BIN="$PROJECT_ROOT/bin/ccsw"
+# Find ccsw binary - check both in worktree and project root
+if [ -f "$SCRIPT_DIR/../bin/ccsw" ]; then
+    CCSW_BIN="$SCRIPT_DIR/../bin/ccsw"
+elif [ -f "$PROJECT_ROOT/bin/ccsw" ]; then
+    CCSW_BIN="$PROJECT_ROOT/bin/ccsw"
+else
+    echo "ERROR: ccsw binary not found in either $SCRIPT_DIR/../bin/ccsw or $PROJECT_ROOT/bin/ccsw"
+    exit 1
+fi
+BIN_DIR="$(dirname "$CCSW_BIN")"
+export PATH="$BIN_DIR:$PATH"
+echo "Using ccsw binary: $CCSW_BIN"
 
 # Create test directory
 mkdir -p "$TEST_DIR"
