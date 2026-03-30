@@ -17,3 +17,13 @@
 - Manual testing requires subshell for state-free verification
 - Test scripts should use `|| true` to handle expected error conditions
 - Profile deletion prevention via CLAUDE_CONFIG_DIR comparison
+
+## Test Isolation Patterns
+- Integration tests use `mktemp -d` to create temporary test directories
+- Test scripts set `CCSW_CONFIG_DIR` and `CCSW_PROFILES_DIR` to temporary paths
+- Error handling requires `set +e`/`set -e` around commands that exit with non-zero codes
+- Test cleanup uses `rm -rf` on temporary directories
+- Binary detection should have fallback logic for worktree vs project root execution
+- Use explicit paths from script location when referencing parent directories
+- Integration tests should work correctly even with empty home directories
+- Environment variable-based configuration provides natural isolation
